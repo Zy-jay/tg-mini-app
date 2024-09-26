@@ -26,10 +26,15 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
+    const authData = {
+      initData: WebApp.initData,
+      initDataUnsafe: WebApp.initDataUnsafe,
+    };
+    console.log(authData);
     if (userData) {
       axios
         .post("https://x-roach-dev.up.railway.app/api/login", {
-          authData: WebApp.initData,
+          authData,
         })
         .then((res) => {
           setRes(res.data);
