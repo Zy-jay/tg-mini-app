@@ -46,7 +46,12 @@ export default function Home() {
   }, [userData]);
 
   return (
-    <main className="p-4">
+    <main
+      className="p-4"
+      style={{
+        backgroundColor: "white",
+      }}
+    >
       {userData ? (
         <>
           <h1 className="text-2xl font-bold mb-4">User Data</h1>
