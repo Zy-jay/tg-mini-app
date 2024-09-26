@@ -29,7 +29,7 @@ export default function Home() {
     if (userData) {
       axios
         .post("https://x-roach-dev.up.railway.app/api/login", {
-          authData: WebApp.initDataUnsafe,
+          authData: WebApp.initData,
         })
         .then((res) => {
           setRes(res.data);
