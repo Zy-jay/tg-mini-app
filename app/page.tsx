@@ -1,6 +1,7 @@
 "use client";
 
 import WebApp from "@twa-dev/sdk";
+import axios from "axios";
 import { useEffect, useState } from "react";
 
 // Define the interface for user data
@@ -15,13 +16,30 @@ interface UserData {
 
 export default function Home() {
   const [userData, setUserData] = useState<UserData | null>(null);
-
+  const [res, setRes] = useState<any>(null);
+  const [error, setError] = useState<any>(null);
   useEffect(() => {
     console.log(WebApp.initDataUnsafe);
     if (WebApp.initDataUnsafe.user) {
       setUserData(WebApp.initDataUnsafe.user as UserData);
     }
   }, []);
+
+  useEffect(() => {
+    if (userData) {
+      axios
+        .post("https://x-roach-dev.up.railway.app/api/login", {
+          userData: WebApp.initDataUnsafe,
+          authDate: WebApp.initDataUnsafe.auth_date,
+        })
+        .then((res) => {
+          setRes(res.data);
+        })
+        .catch((err) => {
+          setError(err);
+        });
+    }
+  }, [userData]);
 
   return (
     <main className="p-4">
@@ -41,6 +59,8 @@ export default function Home() {
             <li>Username: {userData.username || "N/A"}</li>
             <li>Language Code: {userData.language_code}</li>
             <li>Is Premium: {userData.is_premium ? "Yes" : "No"}</li>
+            {res && <li>Response: {JSON.stringify(res, null, "\t")}</li>}
+            {error && <li>Error: {JSON.stringify(error, null, "\t")}</li>}
           </ul>
         </>
       ) : (
