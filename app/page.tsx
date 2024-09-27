@@ -45,7 +45,7 @@ export default function Home() {
           setRes(res.data);
         })
         .catch((err) => {
-          setError(err);
+          setError(err?.message || err);
         });
     }
   }, [userData]);
@@ -59,7 +59,7 @@ export default function Home() {
       })
       .catch((err) => {
         console.log(err);
-        setError(err);
+        setError(err?.message || err);
       });
   };
 
