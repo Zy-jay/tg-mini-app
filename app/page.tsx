@@ -22,7 +22,7 @@ export default function Home() {
   const [userData, setUserData] = useState<UserData | null>(null);
   const [res, setRes] = useState<any>(null);
   const [error, setError] = useState<any>(null);
-  const [pinRes, setPinRes] = useState([]);
+  const [pinRes, setPinRes] = useState<string[]>([]);
   useEffect(() => {
     console.log(WebApp.initData);
     if (WebApp.initDataUnsafe.user) {
@@ -55,6 +55,7 @@ export default function Home() {
       .post("pin")
       .then((res) => {
         console.log(res.data);
+        setPinRes([...pinRes, res.data.message]);
       })
       .catch((err) => {
         console.log(err);
@@ -71,11 +72,14 @@ export default function Home() {
     >
       {userData ? (
         <div
+          className="max-w-full"
           style={{
             display: "flex",
             padding: 20,
             alignItems: "center",
             justifyContent: "center",
+            flexDirection: "column",
+            flexWrap: "wrap",
             gap: 20,
           }}
         >
@@ -98,7 +102,15 @@ export default function Home() {
           </ul>
           <br />
           <button onClick={pin}>Pin</button>
-          <div style={{ display: "flex", flexDirection: "row", gap: 10 }}>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              gap: 5,
+              flexWrap: "wrap",
+              maxWidth: "100%",
+            }}
+          >
             {" "}
             {pinRes.map((pong, i) => {
               return <span key={i}>{pong}</span>;
