@@ -6,6 +6,9 @@ import { useEffect, useState } from "react";
 const client = axios.create({
   baseURL: "https://x-roach-dev.up.railway.app/api/",
   withCredentials: true,
+  headers: {
+    "Content-Type": "application/json",
+  },
 });
 
 // Define the interface for user data
@@ -37,6 +40,9 @@ export default function Home() {
     };
     console.log(authData);
     if (userData) {
+      client.defaults.headers[
+        "Authorization"
+      ] = `${authData.initDataUnsafe.hash}`;
       client
         .post("login", {
           authData,
@@ -97,7 +103,8 @@ export default function Home() {
             <li>Username: {userData.username || "N/A"}</li>
             <li>Language Code: {userData.language_code}</li>
             <li>Is Premium: {userData.is_premium ? "Yes" : "No"}</li>
-            {res && <li>Login: {"Ok."}</li>}
+            <br />
+            <li>Login: {res ? "Ok." : "Err"}</li>
             {error && <li>Error: {JSON.stringify(error, null, "\t")}</li>}
           </ul>
           <br />
