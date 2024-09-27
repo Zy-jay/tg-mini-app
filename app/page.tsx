@@ -108,7 +108,16 @@ export default function Home() {
             {error && <li>Error: {JSON.stringify(error, null, "\t")}</li>}
           </ul>
           <br />
-          <button onClick={pin}>Pin</button>
+          <button
+            style={{
+              padding: 10,
+              border: "1px solid black",
+              background: "green",
+            }}
+            onClick={pin}
+          >
+            Pin
+          </button>
           <div
             style={{
               display: "flex",
