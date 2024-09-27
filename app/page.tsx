@@ -3,6 +3,10 @@
 import WebApp from "@twa-dev/sdk";
 import axios from "axios";
 import { useEffect, useState } from "react";
+const client = axios.create({
+  baseURL: "https://x-roach-dev.up.railway.app/api/",
+  withCredentials: true,
+});
 
 // Define the interface for user data
 interface UserData {
@@ -18,6 +22,7 @@ export default function Home() {
   const [userData, setUserData] = useState<UserData | null>(null);
   const [res, setRes] = useState<any>(null);
   const [error, setError] = useState<any>(null);
+  const [pinRes, setPinRes] = useState([]);
   useEffect(() => {
     console.log(WebApp.initData);
     if (WebApp.initDataUnsafe.user) {
@@ -32,8 +37,8 @@ export default function Home() {
     };
     console.log(authData);
     if (userData) {
-      axios
-        .post("https://x-roach-dev.up.railway.app/api/login", {
+      client
+        .post("login", {
           authData,
         })
         .then((res) => {
@@ -45,6 +50,18 @@ export default function Home() {
     }
   }, [userData]);
 
+  const pin = () => {
+    client
+      .post("pin")
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+        setError(err);
+      });
+  };
+
   return (
     <main
       className="p-4"
@@ -53,7 +70,15 @@ export default function Home() {
       }}
     >
       {userData ? (
-        <>
+        <div
+          style={{
+            display: "flex",
+            padding: 20,
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 20,
+          }}
+        >
           <h1 className="text-2xl font-bold mb-4">User Data</h1>
           <ul>
             <li>
@@ -68,10 +93,18 @@ export default function Home() {
             <li>Username: {userData.username || "N/A"}</li>
             <li>Language Code: {userData.language_code}</li>
             <li>Is Premium: {userData.is_premium ? "Yes" : "No"}</li>
-            {res && <li>Response: {JSON.stringify(res, null, "\t")}</li>}
+            {res && <li>Login: {"Ok."}</li>}
             {error && <li>Error: {JSON.stringify(error, null, "\t")}</li>}
           </ul>
-        </>
+          <br />
+          <button onClick={pin}>Pin</button>
+          <div style={{ display: "flex", flexDirection: "row", gap: 10 }}>
+            {" "}
+            {pinRes.map((pong, i) => {
+              return <span key={i}>{pong}</span>;
+            })}
+          </div>
+        </div>
       ) : (
         <div>Loading...</div>
       )}
