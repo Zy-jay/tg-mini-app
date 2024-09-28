@@ -114,7 +114,7 @@ export default function Home() {
   };
   const getUserRefs = () => {
     client
-      .get("getRefferals?userid=" + user?.userId)
+      .get("getRefferals?userId=" + user?.userId)
       .then((res) => {
         console.log(res.data);
         setUserRefs(res.data);
@@ -127,7 +127,7 @@ export default function Home() {
   };
   const getUserBalance = () => {
     client
-      .get("getTonWalletBalance?userid=" + user?.wallet?.publicAddress)
+      .get("getTonWalletBalance?address=" + user?.wallet?.publicAddress)
       .then((res) => {
         console.log(res.data);
         setDisplayValue(
