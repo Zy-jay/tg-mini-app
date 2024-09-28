@@ -2,6 +2,7 @@
 
 import WebApp from "@twa-dev/sdk";
 import axios from "axios";
+import { get } from "http";
 import { useEffect, useState } from "react";
 const client = axios.create({
   baseURL: "https://x-roach-dev.up.railway.app/api/",
@@ -21,11 +22,38 @@ interface UserData {
   is_premium?: boolean;
 }
 
+const Button = ({
+  onClick,
+  children,
+}: {
+  onClick: () => any | Promise<any>;
+  children: any;
+}) => {
+  return (
+    <button
+      style={{
+        padding: 10,
+        border: "1px solid black",
+        background: "green",
+        borderRadius: 10,
+      }}
+      onClick={onClick}
+    >
+      {children}
+    </button>
+  );
+};
+
 export default function Home() {
   const [userData, setUserData] = useState<UserData | null>(null);
   const [res, setRes] = useState<any>(null);
   const [error, setError] = useState<any>(null);
   const [pinRes, setPinRes] = useState<string[]>([]);
+  const [totalUsers, setTotalUsers] = useState<number>(0);
+  const [userRefs, setUserRefs] = useState<any[]>([]);
+  const [userId, setUserId] = useState<number>(0);
+  const [displayValue, setDisplayValue] = useState<string>("");
+  const [user, setUser] = useState<any>(null);
   useEffect(() => {
     console.log(WebApp.initData);
     if (WebApp.initDataUnsafe.user) {
@@ -49,16 +77,19 @@ export default function Home() {
         })
         .then((res) => {
           setRes(res.data);
+          setUser(res.data);
+          setDisplayValue(JSON.stringify(res.data, null, "\t"));
         })
         .catch((err) => {
           setError(err?.message || err);
+          setDisplayValue(JSON.stringify(err, null, "\t"));
         });
     }
   }, [userData]);
 
   const pin = () => {
     client
-      .post("pin")
+      .get("pin")
       .then((res) => {
         console.log(res.data);
         setPinRes([...pinRes, res.data.message]);
@@ -68,7 +99,51 @@ export default function Home() {
         setError(err?.message || err);
       });
   };
-
+  const getTotalUsers = () => {
+    client
+      .get("totalPlayers")
+      .then((res) => {
+        console.log(res.data);
+        setTotalUsers(res.data);
+        setDisplayValue(JSON.stringify(res.data, null, "\t"));
+      })
+      .catch((err) => {
+        console.log(err);
+        setError(err?.message || err);
+      });
+  };
+  const getUserRefs = () => {
+    client
+      .get("getRefferals", { params: { userId: user?.userId } })
+      .then((res) => {
+        console.log(res.data);
+        setUserRefs(res.data);
+        setDisplayValue(JSON.stringify(res.data, null, "\t"));
+      })
+      .catch((err) => {
+        console.log(err);
+        setError(err?.message || err);
+      });
+  };
+  const getUserBalance = () => {
+    client
+      .get("getTonWalletBalance", {
+        params: { address: user?.wallet?.publicAddress },
+      })
+      .then((res) => {
+        console.log(res.data);
+        setDisplayValue(
+          `Wallet Address ${user?.wallet?.publicAddress} balance: ` +
+            JSON.stringify(res.data, null, "\t") +
+            " TON"
+        );
+      })
+      .catch((err) => {
+        console.log(err);
+        setError(err?.message || err);
+        setDisplayValue(JSON.stringify(err, null, "\t"));
+      });
+  };
   return (
     <main
       className="p-4"
@@ -108,16 +183,22 @@ export default function Home() {
             {error && <li>Error: {JSON.stringify(error, null, "\t")}</li>}
           </ul>
           <br />
-          <button
+          <div
             style={{
-              padding: 10,
-              border: "1px solid black",
-              background: "green",
+              display: "flex",
+              flexDirection: "row",
+              gap: 5,
+              flexWrap: "wrap",
+              maxWidth: "100%",
             }}
-            onClick={pin}
           >
-            Pin
-          </button>
+            <Button onClick={pin}>Pin</Button>
+            <Button onClick={getTotalUsers}>Total Users</Button>
+            <Button onClick={getUserRefs}>Total Users</Button>
+            <Button onClick={getUserBalance}>Total Users</Button>
+          </div>
+
+          {<div>{displayValue}</div>}
           <div
             style={{
               display: "flex",
