@@ -101,7 +101,7 @@ export default function Home() {
   };
   const getTotalUsers = () => {
     client
-      .get("totalPlayers")
+      .get("getTotalPlayers")
       .then((res) => {
         console.log(res.data);
         setTotalUsers(res.data);
@@ -114,7 +114,7 @@ export default function Home() {
   };
   const getUserRefs = () => {
     client
-      .get("getRefferals", { params: { userId: user?.userId } })
+      .get("getRefferals?userid=" + user?.userId)
       .then((res) => {
         console.log(res.data);
         setUserRefs(res.data);
@@ -127,9 +127,7 @@ export default function Home() {
   };
   const getUserBalance = () => {
     client
-      .get("getTonWalletBalance", {
-        params: { address: user?.wallet?.publicAddress },
-      })
+      .get("getTonWalletBalance?userid=" + user?.wallet?.publicAddress)
       .then((res) => {
         console.log(res.data);
         setDisplayValue(
