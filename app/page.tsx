@@ -180,7 +180,7 @@ export default function Home() {
             <li>Is Premium: {userData.is_premium ? "Yes" : "No"}</li>
             <br />
             <li>Login: {res ? "Ok." : "Err"}</li>
-            {error && <li>Error: {JSON.stringify(error, null, "\t")}</li>}
+            {error && <li>Error: {JSON.stringify(error, null, "\n")}</li>}
           </ul>
           <br />
           <div
@@ -194,8 +194,8 @@ export default function Home() {
           >
             <Button onClick={pin}>Pin</Button>
             <Button onClick={getTotalUsers}>Total Users</Button>
-            <Button onClick={getUserRefs}>Total Users</Button>
-            <Button onClick={getUserBalance}>Total Users</Button>
+            <Button onClick={getUserRefs}>Refs</Button>
+            <Button onClick={getUserBalance}>Wallet Balance</Button>
           </div>
 
           {<div>{displayValue}</div>}
