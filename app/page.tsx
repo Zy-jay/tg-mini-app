@@ -230,6 +230,7 @@ export default function Home() {
               maxWidth: "100%",
             }}
           >
+            <Button onClick={pin}>PIN</Button>
             <Button onClick={getStatus}>getStatus</Button>
             <Button onClick={getTotalUsers}>Total Users</Button>
             <Button onClick={getUserRefs}>Refs</Button>
