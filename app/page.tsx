@@ -2,7 +2,6 @@
 
 import WebApp from "@twa-dev/sdk";
 import axios from "axios";
-import { get } from "http";
 import { useEffect, useState } from "react";
 const client = axios.create({
   baseURL: "https://x-roach-dev.up.railway.app/api/",
@@ -142,6 +141,47 @@ export default function Home() {
         setDisplayValue(JSON.stringify(err, null, "\t"));
       });
   };
+
+  const getLeaderboard = () => {
+    client
+      .get("getLeaderboard")
+      .then((res) => {
+        console.log(res.data);
+        setDisplayValue(JSON.stringify(res.data, null, "\t"));
+      })
+      .catch((err) => {
+        console.log(err);
+        setError(err?.message || err);
+        setDisplayValue(JSON.stringify(err, null, "\t"));
+      });
+  };
+  const getTasks = () => {
+    client
+      .get("getTasks")
+      .then((res) => {
+        console.log(res.data);
+        setDisplayValue(JSON.stringify(res.data, null, "\t"));
+      })
+      .catch((err) => {
+        console.log(err);
+        setError(err?.message || err);
+        setDisplayValue(JSON.stringify(err, null, "\t"));
+      });
+  };
+  const getStatus = () => {
+    client
+      .get("getStatus")
+      .then((res) => {
+        console.log(res.data);
+        setDisplayValue(JSON.stringify(res.data, null, "\t"));
+      })
+      .catch((err) => {
+        console.log(err);
+        setError(err?.message || err);
+        setDisplayValue(JSON.stringify(err, null, "\t"));
+      });
+  };
+
   return (
     <main
       className="p-4"
@@ -190,10 +230,12 @@ export default function Home() {
               maxWidth: "100%",
             }}
           >
-            <Button onClick={pin}>Pin</Button>
+            <Button onClick={getStatus}>getStatus</Button>
             <Button onClick={getTotalUsers}>Total Users</Button>
             <Button onClick={getUserRefs}>Refs</Button>
             <Button onClick={getUserBalance}>Wallet Balance</Button>
+            <Button onClick={getLeaderboard}>Leaderboard</Button>
+            <Button onClick={getTasks}>Tasks</Button>
           </div>
 
           {<div>{displayValue}</div>}
