@@ -72,7 +72,8 @@ export default function Home() {
       ] = `${authData.initDataUnsafe.hash}`;
       client
         .post("login", {
-          authData,
+          initData: WebApp.initData,
+          initDataUnsafe: WebApp.initDataUnsafe,
         })
         .then((res) => {
           setRes(res.data);
